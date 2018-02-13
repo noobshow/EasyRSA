@@ -41,6 +41,29 @@ class KeyPair
     }
 
     /**
+     * Load a private/public RSA key pair
+     *
+     * @access public
+     * @param string $key
+     * @param int $type optional
+     *
+     * @return self
+     * @throws InvalidKeyException
+     */
+    public static function loadKeyPair($key, $type = false)
+    {
+        if (empty($key)) {
+            throw new InvalidKeyException('Can\'t detect any Private/Public Key.');
+        }
+        $rsa = new RSA();
+        $keypair = $rsa->loadKey($key, $type);
+        return new KeyPair(
+            new PrivateKey($keypair['privatekey']),
+            new PublicKey($keypair['publickey'])
+        );
+    }
+
+    /**
      * @return PublicKey
      */
     public function getPublicKey()
